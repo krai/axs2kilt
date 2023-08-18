@@ -1,0 +1,35 @@
+{
+    "_parent_entries": [ [ "^", "byname", "python_in_shell" ] ],
+    "_producer_rules": [
+        [ [ "compiled", "protobuf" ], [["run"]] ]
+    ],
+
+    "protobuf_version": "3.11.4",
+    "target_platform": "linux",
+    "for_qaic": "yes",
+
+    "return_this_entry": [ "^^", "execute", [[
+        [ "get_kernel" ],
+        [ "work_collection" ],
+        [ "attached_entry", [ [ "^^", "substitute", "compiled_protobuf_v#{protobuf_version}#_#{target_platform}#" ], ["^^", "substitute", {
+            "tags": [ "compiled", "protobuf" ],
+            "protobuf_version": "#{protobuf_version}#", 
+            "target_platform": "#{target_platform}#",
+            "for_qaic": "#{for_qaic}#"
+        } ] ] ],
+        [ "save" ]
+    ]] ],
+
+    "install_dir":[ "^^", "execute", [[
+        [ "get", "return_this_entry" ],
+        [ "get_path" ]
+    ]] ],
+
+    "extra_env": {
+        "INSTALL_DIR": [ "^^", "substitute", "#{install_dir}#" ],
+	"FOR_QAIC": [ "^^", "substitute", "#{for_qaic}#" ]
+    },
+
+    "file_name": "install.sh",
+    "shell_cmd": [ "^^", "get_path" ]
+}

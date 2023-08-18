@@ -1,0 +1,8 @@
+{
+    "_producer_rules": [
+        [ [ "git_repo", "repo_name=kilt-mlperf-dev" ], [["get_kernel"],["byname","git"],["clone"]], {
+        }, [ "url", "checkout" ] ]
+    ],
+    "url": "https://github.com/krai/kilt-mlperf-dev.git",
+    "checkout": "main"
+}

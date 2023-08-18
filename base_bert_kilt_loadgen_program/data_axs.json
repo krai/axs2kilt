@@ -1,0 +1,68 @@
+{
+    "_parent_entries": [ [ "^", "byname", "base_kilt_loadgen_program" ] ],
+
+    "model_name": "bert-99",
+
+    "loadgen_buffer_size": 10833,
+    "loadgen_dataset_size": 10833,
+
+    "kilt_datasource_config": null,
+    "kilt_device_config": null,
+    "kilt_device_ringfence_driver": null,
+    "kilt_device_qaic_skip_stage": [ "^", "case",[ ["^^", "get", "model_name"], "bert-99", "convert" ], {"default_value": null}, ["model_name"]],
+    "kilt_device_enqueue_yield_time": null,
+    "kilt_device_scheduler_yield_time": null,
+    "kilt_dispatch_yield_time": null,
+    "kilt_scheduler_yield_time": null,
+    "kilt_unique_server_id": null,
+
+    "recommended_activation_count": 1,
+    "recommended_batch_size": 1000,
+    "recommended_input_select": 0,
+    "recommended_max_wait_abs": "",
+    "recommended_queue_length": 4,
+    "recommended_threads_per_queue": 4,
+
+    "verbosity": 0,
+
+    "device_id": 0,
+    "set_device_id": "all",
+
+    "squad_dataset_query":[ "downloaded", "squad_original" ],
+    "squad_dataset_entry": [ "^", "byquery", [[ "^^", "get", "squad_dataset_query" ]], {}, ["squad_dataset_query"] ],
+    "squad_dataset_original_path": [ "^^", "execute", [[
+        [ "get", "squad_dataset_entry" ],
+        [ "get_path" ]
+    ]] ],
+
+    "dataset_max_seq_length": 384,
+    "tokenized_squad_query":[ "tokenized", "squad_v1_1", "calibration=no" , [ "^^", "substitute", "dataset_max_seq_length=#{dataset_max_seq_length}#" ] ],
+    "tokenized_squad_entry": [ "^", "byquery", [[ "^^", "get", "tokenized_squad_query" ]], {}, ["tokenized_squad_query"] ],
+    "tokenized_squad_path": [ "^^", "execute", [[
+        [ "get", "tokenized_squad_entry" ],
+        [ "get_path" ]
+    ]] ],
+    "tokenized_squad_dirname": [ "^^", "func", ["os.path.dirname", ["^^", "get", "tokenized_squad_path"]] ] ,
+    "tokenized_squad_files_prefix": [ "^^", "substitute", "#{tokenized_squad_entry.files_prefix}#" ],
+
+    "mlperf_inference_git_query": [ "^", "byquery", "git_repo,repo_name=mlperf_inference_git" ],
+    "mlperf_inference_git_path": [ "^^", "execute", [[
+        [ "get", "mlperf_inference_git_query" ],
+        [ "get_path" ]
+    ]] ],
+
+    "protobuf_path": [ "^", "execute", [[
+        [ "byquery", "compiled,protobuf" ],
+        [ "get_path" ]
+    ]] ],
+
+    "flavour": "bert",
+
+    "program_binary_query": [ "^^", "substitute", "compiled,kilt_executable,#{flavour}#,device=#{device}#"],
+    "program_binary_entry": [ "^", "byquery", [[ "^^", "get", "program_binary_query" ]], {}, ["program_binary_query"] ],
+    "program_binary_path":[ "^^", "execute", [[
+        [ "get", "program_binary_entry" ],
+        [ "get_path" ]
+    ]] ]
+
+}

@@ -1,0 +1,149 @@
+{
+    "_parent_entries": [ [ "^", "byname", "shell" ], [ "^", "byname", "base_loadgen_program" ], ["^", "byname", "base_retinanet_kilt_loadgen_program"]],
+    "_producer_rules": [
+            [ [ "loadgen_output", "object_detection", "device=tensorrt", "framework=kilt" ], [["get", "pipeline"]] ]
+    ],
+
+    "model_name": "retinanet",
+
+    "device": "tensorrt",
+
+    "framework": "kilt",
+
+    "dataset_name": "openimages",
+
+    "loadgen_dataset_size": 24781,
+    
+    "loadgen_buffer_size": 64,
+
+    "loadgen_scenario": "Offline",
+
+    "loadgen_trigger_cold_run": false,
+
+    "verbosity": 1,
+
+    "ml_model_seq_length": 384,
+
+    "recommended_activation_count": 1,
+    
+    "recommended_max_wait_abs": 30000,
+    
+    "device_id": 0,
+
+    "engine_source": "nvidia",
+
+    "plugins_path": "../kilt-mlperf-dev/plugins/libnmsoptplugin.so",
+
+    "model_query": ["^^", "substitute", [
+        "kilt_ready,device=#{device}#,model_name=#{model_name}#,loadgen_scenario=#{loadgen_scenario}#,engine_source=#{engine_source}#"
+        ]],
+    "model_entry": [ "^", "byquery", [[ "^^", "get", "model_query" ]], {}, ["model_query"] ],
+    "model_source": [ "^^", "execute", [[
+            [ "get", "model_entry"],
+            [ "get_path" ]
+        ]]
+    ],
+
+    "cuda_lib_path_query": [ "config", "cuda_paths" ],
+    "cuda_lib_path_entry": [ "^", "byquery", [[ "^^", "get", "cuda_lib_path_query" ]], {}, [ "cuda_lib_path_query" ]],
+    "cuda_libs_path": [ "^^", "dig", [[ "^^", "substitute", [[ "cuda_lib_path_entry", "#{sut_name}#", "libs" ]] ]] ],
+
+    "loadgen_compliance_test": false,
+    "env": {
+        "LD_LIBRARY_PATH": [ "^^", "substitute", "#{cuda_libs_path}#"],
+        "KILT_JSON_CONFIG": [ "^^", "substitute", "#{input_parameters_file_path}#" ],
+        "CUDA_MODULE_LOADING": "LAZY"
+    },
+
+    "tensorrt_config_query": [ "config", "tensorrt" ],
+    "tensorrt_config_entry": [ "^", "byquery", [[ "^^", "get", "tensorrt_config_query" ]], {}, [ "tensorrt_config_query" ]],
+    "tensorrt_number_of_stream": [ "^^", "dig", [[ "^^", "substitute", [[ "tensorrt_config_entry", "number_of_stream" ]] ]] ],
+    "tensorrt_input_memory_management_strategy": [ "^^", "dig", [[ "^^", "substitute", [[ "tensorrt_config_entry", "input_memory_management_strategy" ]] ]] ],
+    "tensorrt_ouput_memory_management_strategy": [ "^^", "dig", [[ "^^", "substitute", [[ "tensorrt_config_entry", "ouput_memory_management_strategy" ]] ]] ],
+
+    "tensorrt_scenario_config_query": [ "config", "tensorrt_scenario_parameters" ],
+    "tensorrt_scenario_config_entry": [ "^", "byquery", [[ "^^", "get", "tensorrt_scenario_config_query" ]], {}, [ "tensorrt_scenario_config_query" ]],
+    "recommended_batch_size": 1,
+    "tensorrt_batch_size": [ "^^", "dig", [[ "^^", "substitute", [[
+        "tensorrt_scenario_config_entry", "#{loadgen_scenario}#", "tensorrt_batch_size"
+    ]] ]] ],
+    "loadgen_count_override_min": 1,
+    "loadgen_count_override_max_tmp": [ "^^", "dig", [[ "^^", "substitute", [[
+        "tensorrt_scenario_config_entry", "#{loadgen_scenario}#", "#{loadgen_mode}#", "loadgen_count_override_max"
+    ]] ]] ],
+    "loadgen_target_qps": [ "^^", "dig", [[ "^^", "substitute", [[
+        "tensorrt_scenario_config_entry", "#{loadgen_scenario}#", "#{model_name}#", "#{engine_source}#", "loadgen_target_qps"
+    ]] ]] ],
+    "kilt_input_format": [ "^^", "dig", [[ "^^", "substitute", [[
+        "tensorrt_scenario_config_entry", "#{loadgen_scenario}#", "#{model_name}#", "#{engine_source}#", "kilt_input_format"
+    ]] ]] ],
+    "kilt_output_format": [ "^^", "dig", [[ "^^", "substitute", [[
+        "tensorrt_scenario_config_entry", "#{loadgen_scenario}#", "#{model_name}#", "#{engine_source}#", "kilt_output_format"
+    ]] ]] ],
+
+    "output_entry_parents": [ "AS^IS", "AS^IS", ["^", "byname", "base_object_detection_loadgen_experiment"]],
+    "output_entry_tags": [ "loadgen_output", "object_detection"],
+    "output_entry_param_names": [
+        "dataset_name",
+        "device",
+        "engine_source",
+        "framework",
+        "input_data_types",
+        "loadgen_buffer_size",
+        "loadgen_compliance_test",
+        "loadgen_count_override",
+        "loadgen_count_override_max",
+        "loadgen_count_override_min",
+        "loadgen_dataset_size",
+        "loadgen_mode",
+        "loadgen_multistreamness",
+        "loadgen_scenario",
+        "loadgen_target_latency",
+        "loadgen_target_qps",
+        "loadgen_trigger_cold_run",
+        "model_name",
+        "plugins_path",
+        "program_name",
+        "retrained",
+        "sut_name",
+        "url",
+        "verbosity",
+        "weight_data_types",
+        "weight_transformations",
+
+        "tensorrt_number_of_stream",
+        "tensorrt_batch_size",
+        "tensorrt_input_memory_management_strategy",
+        "tensorrt_ouput_memory_management_strategy",
+
+        "kilt_object_detection_preprocessed_dir",
+        "kilt_object_detection_preprocessed_subset_fof",
+        "kilt_model_disable_nms",
+        "kilt_model_max_detections",
+        "kilt_prior_bin_path",
+        "ml_model_has_background_class",
+        "ml_model_image_height",
+        "ml_model_image_width",
+        "ml_model_image_channels"
+    ],
+    "output_entry_subs_listmap": [
+        "kilt_model_name", "retinanet",
+        "kilt_model_seq_length", "#{ml_model_seq_length}#",
+        "kilt_model_batch_size", "#{recommended_batch_size}#",
+        "kilt_input_format", "#{kilt_input_format}#",
+        "kilt_output_format", "#{kilt_output_format}#",
+        "kilt_device_ids", "#{device_id}#",
+        "kilt_model_root", "#{model_source}#",
+        "qaic_activation_count", "#{recommended_activation_count}#",
+        "qaic_queue_length", "#{recommended_queue_length}#",
+        "qaic_threads_per_queue", "#{recommended_threads_per_queue}#",
+        "qaic_input_select", "#{recommended_input_select}#",
+        "kilt_max_wait_abs", "#{recommended_max_wait_abs}#",
+
+        "duration", 120,
+        "pre_post_processing", "on",
+        "driver_path", "#{cuda_libs_path}#"
+    ],
+
+    "shell_cmd_with_subs": [ "^^", "substitute", "#{program_binary_path}#"]
+}

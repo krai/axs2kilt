@@ -1,0 +1,121 @@
+{
+    "_parent_entries": [ [ "^", "byname", "shell" ], [ "^", "byname", "base_loadgen_program" ], ["^", "byname", "base_bert_kilt_loadgen_program"]],
+    "_producer_rules": [
+            [ [ "loadgen_output", "bert_squad", "device=onnxrt", "framework=kilt"], [["get", "pipeline"]] ]
+    ],
+
+    "model_name": "bert-99",
+
+    "dataset_name": "squad_v1_1",
+    
+    "device": "onnxrt",
+
+    "framework": "kilt",
+    
+    "backend_type": "cpu",
+    
+    "driver_path": null,
+
+    "loadgen_scenario": "SingleStream",
+
+    "recommended_batch_size": 1,
+
+    "verbosity": 1,
+
+    "loadgen_trigger_cold_run": false,
+
+    "compiled_model_query": ["^^", "substitute", ["quant_ready,onnx_model,packed,model_name=bert_large"]],
+    "compiled_model_entry": [ "^", "byquery", [[ "^^", "get", "compiled_model_query" ]], {}, ["compiled_model_query"] ],
+    "compiled_model_source": [ "^^", "execute", [[
+            [ "get", "compiled_model_entry"],
+            [ "get_path" ]
+        ]]
+    ],
+
+    "retrained": [ "^^", "dig", [[ "^^", "substitute", [[ "compiled_model_entry", "retrained" ]] ]] ],
+    "input_data_types": [ "^^", "dig", [[ "^^", "substitute", [[ "compiled_model_entry", "input_data_types" ]] ]] ],
+    "weight_data_types": [ "^^", "dig", [[ "^^", "substitute", [[ "compiled_model_entry", "weight_data_types" ]] ]] ],
+    "starting_weights_filename": [ "^^", "dig", [[ "^^", "substitute", [[ "compiled_model_entry", "starting_weights_filename" ]] ]] ],
+    "weight_transformations": [ "^^", "dig", [[ "^^", "substitute", [[ "compiled_model_entry", "weight_transformations" ]] ]] ],
+
+    "onnxruntime_path": [ "^", "execute", [[
+        [ "byquery", "extracted,onnxruntime_lib" ],
+        [ "get_path" ]
+    ]] ],
+
+    "model_input_format": "INT64,1,384:INT64,1,8:INT64,1,384:INT64,1,384", 
+
+    "model_output_format": "FLOAT32,1,384:FLOAT32,1,384", 
+
+    "ml_model_seq_length": 384,
+
+    "recommended_activation_count": 1,
+    "recommended_max_wait_abs": null,
+    "device_id": 0,
+
+    "loadgen_compliance_test": false,
+    "env": {
+        "LD_LIBRARY_PATH": [ "^^", "substitute", "#{driver_path}#:#{onnxruntime_path}#/lib:#{protobuf_path}#/install/lib/"],
+        "KILT_JSON_CONFIG": [ "^^", "substitute", "#{input_parameters_file_path}#" ]
+    },
+
+    "output_entry_parents": [ "AS^IS", "AS^IS", ["^", "byname", "base_bert_loadgen_experiment"] ],
+    "output_entry_tags": [ "loadgen_output", "bert_squad"],
+    "output_entry_param_names": [
+        "dataset_name",
+        "device",
+        "framework",
+        "backend_type",
+        "driver_path",
+        "loadgen_buffer_size",
+        "loadgen_compliance_test",
+        "loadgen_count_override",
+        "loadgen_count_override_max",
+        "loadgen_count_override_min",
+        "loadgen_dataset_size",
+        "loadgen_mode",
+        "loadgen_multistreamness",
+        "loadgen_scenario",
+        "loadgen_target_latency",
+        "loadgen_target_qps",
+        "loadgen_trigger_cold_run",
+        "model_name",
+        "program_name",
+        "sut_name",
+        "verbosity",
+
+        "retrained",
+        "input_data_types",
+        "weight_data_types",
+        "starting_weights_filename",
+        "weight_transformations",
+
+        "squad_dataset_original_path",
+        "tokenized_squad_path"
+    ],
+    "output_entry_subs_listmap": [
+        "kilt_model_name", "bert",
+        "kilt_input_format", "#{model_input_format}#",
+        "kilt_output_format", "#{model_output_format}#",
+        "kilt_model_batch_size", "#{recommended_batch_size}#",
+        "kilt_device_ids", "#{device_id}#",
+        "kilt_model_root", "#{compiled_model_source}#",
+        "kilt_max_wait_abs", "#{recommended_max_wait_abs}#",
+        "kilt_backend_type", "#{backend_type}#", 
+
+        "model_path", "#{compiled_model_source}#",
+        "url", "#{starting_weights_filename}#",
+
+        "dataset_squad_tokenized_input_ids", "#{tokenized_squad_files_prefix}#_input_ids.raw",
+        "dataset_squad_tokenized_input_mask", "#{tokenized_squad_files_prefix}#_input_mask.raw",
+        "dataset_squad_tokenized_max_seq_length", "#{dataset_max_seq_length}#",
+        "dataset_squad_tokenized_root", "#{tokenized_squad_dirname}#",
+        "dataset_squad_tokenized_segment_ids", "#{tokenized_squad_files_prefix}#_segment_ids.raw"
+    ],
+    "in_dir": [ "^^", "execute", [[
+        [ "get", "output_entry" ],
+        [ "get_path" ]
+    ]] ],
+
+    "shell_cmd_with_subs": [ "^^", "substitute", "#{program_binary_path}#"]
+}

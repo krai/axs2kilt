@@ -1,0 +1,70 @@
+{
+    "_parent_entries": [ [ "^", "byname", "python_script" ] ],
+    "_producer_rules": [
+        [ [ "quant_ready", "onnx_model", "packed", "model_name=bert_large" ], [["run"]], { "return_saved_record_entry": false } ]
+    ],
+
+    "return_this_entry": [ "^^", "execute", [[
+        [ "get_kernel" ],
+        [ "work_collection" ],
+        [ "attached_entry", [ "quant_ready_onnx_packed_bert_large", {
+                "tags": [ "quant_ready", "onnx_model", "packed"],
+                "model_name": [ "^^", "substitute", "#{model_name}#" ],
+                "starting_weights_filename": "https://zenodo.org/record/3733910/files/model.onnx",
+                "retrained": false,
+                "input_data_types": "fp32",
+                "weight_data_types": "fp32",
+                "weight_transformations": "PyTorch -> ONNX",
+                "file_name": "model.onnx"
+            } ] ],
+        [ "save" ]
+    ]] ],
+
+    "model_query": ["onnx_conversion_ready","tf_model","model_name=bert_large"],
+    "model_source": [ "^^", "execute", [[
+        [ "get_kernel" ],
+        [ "byquery",[[ "^^", "get","model_query" ]] ],
+        [ "get_path" ]
+    ]] ],
+    "mlperf_inference_git_entry": [ "^", "byquery", "git_repo,repo_name=mlperf_inference_git" ],
+
+    "bert_config_path": [ "^^", "execute", [[
+        [ "get", "mlperf_inference_git_entry" ],
+        [ "get_path", [["language", "bert","bert_config.json" ]] ]
+    ]]  ],
+
+    "protobuf_query": ["python_package", "package_name=protobuf", "package_version=3.20.3"],
+    "nvidia_pyindex_query": ["python_package", "package_name=nvidia-pyindex"],
+    "tokenization_query": ["python_package", "package_name=tokenization"],
+    "onnx_graphsurgeon_query": ["python_package", "package_name=onnx-graphsurgeon", "package_version=0.3.26", "pip_options=-f https://developer.download.nvidia.com/compute/redist/onnx-graphsurgeon"],
+    "onnx_simplifier_query": ["python_package", "package_name=onnx-simplifier", "package_version=0.3.7"],
+    "numpy_query": ["python_package", "package_name=numpy", "package_version=1.23.0"],
+    "tensorflow_query": ["python_package", "package_name=tensorflow", "package_version=2.11.0"],
+    "onnx_query": ["python_package", "package_name=onnx", "package_version=1.12.0", "pip_options=numpy==1.23.0 protobuf==3.20.1" ],
+    "torch_query": ["python_package", "package_name=torch", "package_version=1.8.1"],
+    "transformers_query": ["python_package", "package_name=transformers", "package_version=2.4.0"],
+
+    "python_deps": [
+        [ "^", "byquery", [ [ "^^", "get", "protobuf_query" ] ], {}, ["protobuf_query"] ],
+        [ "^", "byquery", [ [ "^^", "get", "nvidia_pyindex_query" ] ], {}, ["nvidia_pyindex_query"] ],
+        [ "^", "byquery", [ [ "^^", "get", "tokenization_query" ] ], {}, ["tokenization_query"] ],
+        [ "^", "byquery", [ [ "^^", "get", "onnx_graphsurgeon_query" ] ], {}, ["onnx_graphsurgeon_query"] ],
+        [ "^", "byquery", [ [ "^^", "get", "onnx_simplifier_query" ] ], {}, ["onnx_simplifier_query"] ],
+        [ "^", "byquery", [ [ "^^", "get", "numpy_query" ] ], {}, ["numpy_query"] ],
+        [ "^", "byquery", [ [ "^^", "get", "tensorflow_query" ] ], {}, ["tensorflow_query"] ],
+        [ "^", "byquery", [ [ "^^", "get", "onnx_query" ] ], {}, ["onnx_query"] ],
+        [ "^", "byquery", [ [ "^^", "get", "torch_query" ] ], {}, ["torch_query"] ],
+        [ "^", "byquery", [ [ "^^", "get", "transformers_query" ] ], {}, ["transformers_query"] ]
+    ],
+
+    "target_dir": [ "^^", "execute", [[
+        [ "get", "return_this_entry" ],
+        [ "get_path" ],
+        0,
+        [ "func", "os.path.dirname" ]
+    ]] ],
+
+    "rel_script_path": "convert_model.py",
+
+    "script_extra_params": [ "^^", "substitute", "--src #{model_source}# --dest #{target_dir}#/ --config_path #{bert_config_path}#" ]
+}

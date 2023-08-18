@@ -1,0 +1,53 @@
+{
+    "_parent_entries": [
+        [
+            "^",
+            "core_collection"
+        ],
+        [
+            "^",
+            "byname",
+            "git"
+        ]
+    ],
+    "tags": [
+        "git_repo",
+        "collection"
+    ],
+    "contained_entries": {
+        "algo_efficient_seq_packing_for_bert_recipe": "algo_efficient_seq_packing_for_bert_recipe",
+        "base_bert_kilt_loadgen_program": "base_bert_kilt_loadgen_program",
+        "base_kilt_loadgen_program": "base_kilt_loadgen_program",
+        "base_resnet50_kilt_loadgen_program": "base_resnet50_kilt_loadgen_program",
+        "base_retinanet_kilt_loadgen_program": "base_retinanet_kilt_loadgen_program",
+        "bert_squad_kilt_loadgen_onnxrt": "bert_squad_kilt_loadgen_onnxrt",
+        "bert_squad_kilt_loadgen_qaic": "bert_squad_kilt_loadgen_qaic",
+        "bert_squad_kilt_loadgen_tensorrt": "bert_squad_kilt_loadgen_tensorrt",
+        "kilt_executable_bert_onnxrt_recipe": "kilt_executable_bert_onnxrt_recipe",
+        "kilt_executable_bert_qaic_recipe": "kilt_executable_bert_qaic_recipe",
+        "kilt_executable_bert_network_client_qaic_recipe": "kilt_executable_bert_network_client_qaic_recipe",
+        "kilt_executable_bert_network_server_qaic_recipe": "kilt_executable_bert_network_server_qaic_recipe",
+        "kilt_executable_bert_tensorrt_recipe": "kilt_executable_bert_tensorrt_recipe",
+        "kilt_executable_resnet50_onnxrt_recipe": "kilt_executable_resnet50_onnxrt_recipe",
+        "kilt_executable_resnet50_qaic_recipe": "kilt_executable_resnet50_qaic_recipe",
+        "kilt_executable_resnet50_snpe_recipe": "kilt_executable_resnet50_snpe_recipe",
+        "kilt_executable_retinanet_qaic_recipe": "kilt_executable_retinanet_qaic_recipe",
+        "kilt_executable_retinanet_network_client_qaic_recipe": "kilt_executable_retinanet_network_client_qaic_recipe",
+        "kilt_executable_retinanet_network_server_qaic_recipe": "kilt_executable_retinanet_network_server_qaic_recipe",
+        "kilt_executable_retinanet_tensorrt_recipe": "kilt_executable_retinanet_tensorrt_recipe",
+        "kilt_mlperf_dev_git_recipe": "kilt_mlperf_dev_git_recipe",
+        "lib_kilt_c_recipe": "lib_kilt_c_recipe",
+        "model_onnx_bert_large_packed_recipe": "model_onnx_bert_large_packed_recipe",
+        "model_tf_bert_large_recipe": "model_tf_bert_large_recipe",
+        "protobuf_c_recipe": "protobuf_c_recipe",
+        "resnet50_kilt_loadgen_onnxrt": "resnet50_kilt_loadgen_onnxrt",
+        "resnet50_kilt_loadgen_qaic": "resnet50_kilt_loadgen_qaic",
+        "resnet50_kilt_loadgen_snpe": "resnet50_kilt_loadgen_snpe",
+        "retinanet_kilt_loadgen_qaic": "retinanet_kilt_loadgen_qaic",
+        "retinanet_kilt_loadgen_tensorrt": "retinanet_kilt_loadgen_tensorrt",
+        "squad_efficient_seq_packed_for_bert_recipe": "squad_efficient_seq_packed_for_bert_recipe"
+    },
+    "repo_name": "axs2kilt",
+    "submodules": false,
+    "checkout": "main"
+}

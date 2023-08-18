@@ -1,0 +1,67 @@
+{
+    "_parent_entries": [ [ "^", "byname", "base_kilt_loadgen_program" ] ],
+
+    "model_name": "resnet50",
+
+    "loadgen_buffer_size": 1024,
+    "loadgen_dataset_size": 50000,
+
+    "kilt_datasource_config": null,
+    "kilt_device_config": null,
+    "kilt_device_ringfence_driver": null,
+    "kilt_device_qaic_skip_stage": "convert",
+    "kilt_device_enqueue_yield_time": null,
+    "kilt_device_scheduler_yield_time": null,
+    "kilt_dispatch_yield_time": null,
+    "kilt_scheduler_yield_time": null,
+    "kilt_unique_server_id": null,
+
+    "recommended_activation_count": 1,
+    "recommended_batch_size": null,
+    "recommended_input_select": 0,
+    "recommended_max_wait_abs": "",
+    "recommended_queue_length": 4,
+    "recommended_threads_per_queue": 4,
+
+    "verbosity": 0,
+
+    "device_id": 0,
+    "set_device_id": "all",
+    
+    "imagenet_query": [ "extracted", "imagenet" ],
+    "images_directory": [ "^", "execute", [[
+        [ "byquery", [[ "^^", "get", "imagenet_query" ]] ],
+        [ "get_path",[[ "extracted" ]] ]
+    ]], {}, [ "imagenet_query" ] ],
+
+    "annotation_query": [ "extracted", "imagenet_annotation" ],
+    "annotation_directory": [ "^", "execute", [[
+        [ "byquery", [[ "^^", "get", "annotation_query" ]] ],
+        [ "get_path" ]
+    ]], {}, [ "annotation_query" ] ],
+
+    "resolution": 224,
+
+    "dataset_imagenet_preprocessed_query": [ "^^", "substitute", [["preprocessed", "dataset_name=imagenet","preprocess_method=opencv", "first_n=#{loadgen_dataset_size}#", "quantized+" ]] ],
+    "dataset_imagenet_preprocessed_entry": [ "^", "byquery", [[ "^^", "get", "dataset_imagenet_preprocessed_query" ]], {}, ["dataset_imagenet_preprocessed_query"] ],
+    
+    "dataset_imagenet_preprocessed_input_square_side": 224,
+    "ml_model_has_background_class": "YES",
+    
+    "dataset_imagenet_preprocessed_subset_fof":[ "^^", "execute", [[
+	    [ "get", "dataset_imagenet_preprocessed_entry" ],
+	    [ "get_path", [[ "preprocessed", "image_list.txt" ]] ]
+    ]] ], 
+
+    "dataset_imagenet_preprocessed_dir":[ "^^", "execute", [[
+	    [ "get", "dataset_imagenet_preprocessed_entry" ],
+	    [ "get_path", "preprocessed" ]
+    ]] ],
+
+    "program_binary_query": [ "^^", "substitute", "compiled,kilt_executable,resnet50,device=#{device}#"],
+    "program_binary_entry": [ "^", "byquery", [[ "^^", "get", "program_binary_query" ]], {}, ["program_binary_query"] ],
+    "program_binary_path":[ "^^", "execute", [[
+        [ "get", "program_binary_entry" ],
+        [ "get_path" ]
+    ]] ]
+}

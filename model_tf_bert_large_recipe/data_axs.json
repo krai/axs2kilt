@@ -1,0 +1,27 @@
+{
+    "_producer_rules": [
+        [ [ "onnx_conversion_ready", "tf_model", "model_name=bert_large", "source?=hosted" ], [["get_kernel"],["byname","extractor"],["extract"]], {
+            "archive_path": [ "AS^IS", "^", "execute", [[
+                [ "byquery", [[ "^^", "substitute", "downloaded,tf_model,model_name=bert_large,source=hosted" ]]],
+                [ "get_path" ]
+                ]]
+            ],
+            "tags": [ "onnx_conversion_ready" ],
+            "file_name": [ "extracted", "model.ckpt-5474" ]
+        }, [] ],
+        [ [ "downloaded", "tf_model", "model_name=bert_large", "source=hosted" ], [["get_kernel"],["byname","downloader"],["download"]], {
+            "downloading_tool_query": "shell_tool,can_download_url_from_google_drive",
+            "url": "https://drive.google.com/uc?id=1dPyGDsCct1aMg2EyJ0JScRObyraQKXng",
+            "file_path": "model_tf_bert_large.zip",
+            "entry_name": "downloaded_bert_large_hosted.tf"
+        }, [] ],
+        [ ["onnx_conversion_ready", "tf_model", "model_name=bert_large", "source?=official" ], [["get_kernel"],["byname","downloader"],["download"]], {
+           "downloading_tool_query": "shell_tool,can_download_url_from_zenodo",
+           "url": "10.5281/zenodo.3733868",
+           "split_file_path":[ "model.ckpt-5474" ],
+           "entry_name": "downloaded_bert_large_official.tf",
+           "tags": [ "onnx_conversion_ready" ]
+        }, [] ]
+    ]
+
+}
