@@ -15,6 +15,7 @@ Import these repos into your work_collection
 axs byquery git_repo,collection,repo_name=axs2kilt
 axs byquery git_repo,collection,repo_name=axs2onnxrt
 axs byquery git_repo,collection,repo_name=axs2mlperf
+axs byquery git_repo,collection,repo_name=axs2config
 axs byquery git_repo,repo_name=kilt-mlperf
 ```
 
@@ -74,12 +75,12 @@ export SUT=<7920t-kilt-onnxruntime_cpu | 7920t-kilt-onnxruntime_gpu>
 
 Measure Accuracy (Quick Run)
 ```
-axs byquery sut_name=${SUT},loadgen_output,bert_squad,device=onnxrt,backend_type=${BACKEND},framework=kilt,model_name=bert-99,loadgen_scenario=SingleStream,loadgen_mode=AccuracyOnly , get accuracy_report
+axs byquery sut_name=${SUT},loadgen_output,bert_squad,device=onnxrt,backend_type=${BACKEND},framework=kilt,model_name=bert-99,loadgen_scenario=SingleStream,loadgen_mode=AccuracyOnly , get accuracy
 ```
 
 Measure Accuracy (Full Run)
 ```
-axs byquery sut_name=${SUT},loadgen_output,bert_squad,device=onnxrt,backend_type=${BACKEND},framework=kilt,model_name=bert-99.9,loadgen_scenario=SingleStream,loadgen_mode=AccuracyOnly,loadgen_dataset_size=10833,loadgen_buffer_size=10833 , get accuracy_report
+axs byquery sut_name=${SUT},loadgen_output,bert_squad,device=onnxrt,backend_type=${BACKEND},framework=kilt,model_name=bert-99.9,loadgen_scenario=SingleStream,loadgen_mode=AccuracyOnly,loadgen_dataset_size=10833,loadgen_buffer_size=10833 , get accuracy
 ```
 
 Run Performance (Quick Run)
@@ -89,5 +90,5 @@ axs byquery sut_name=${SUT},loadgen_output,bert_squad,device=onnxrt,backend_type
 
 Run Performance (Full Run)
 ```
-axs byquery sut_name=${SUT},loadgen_output,bert_squad,device=onnxrt,backend_type=${BACKEND},framework=kilt,model_name=bert-99,loadgen_scenario=SingleStream,loadgen_mode=PerformanceOnly,loadgen_dataset_size=10833,loadgen_buffer_size=10833,loadgen_target_latency=</measured value/> , parse_summary
+axs byquery sut_name=${SUT},loadgen_output,bert_squad,device=onnxrt,backend_type=${BACKEND},framework=kilt,model_name=bert-99,loadgen_scenario=SingleStream,loadgen_mode=PerformanceOnly,loadgen_dataset_size=10833,loadgen_buffer_size=10833,loadgen_target_latency=<measured value> , parse_summary
 ```
