@@ -15,6 +15,7 @@ Import these repos into your work_collection
 axs byquery git_repo,collection,repo_name=axs2kilt
 axs byquery git_repo,collection,repo_name=axs2snpe
 axs byquery git_repo,collection,repo_name=axs2mlperf
+axs byquery git_repo,collection,repo_name=axs2config
 axs byquery git_repo,repo_name=kilt-mlperf
 ```
 
@@ -74,12 +75,12 @@ export SCENARIO=<SingleStream | MultiStream>
 
 Measure Accuracy (Quick Run)
 ```
-axs byquery sut_name=${SUT},loadgen_output,image_classifier,device=snpe,backend_type=${BACKEND},loadgen_scenario=${SCENARIO},framework=kilt,model_name=resnet50,loadgen_mode=AccuracyOnly , get accuracy_report
+axs byquery sut_name=${SUT},loadgen_output,image_classifier,device=snpe,backend_type=${BACKEND},loadgen_scenario=${SCENARIO},framework=kilt,model_name=resnet50,loadgen_mode=AccuracyOnly , get accuracy
 ```
 
 Measure Accuracy (Full Run)
 ```
-axs byquery sut_name=${SUT},loadgen_output,image_classifier,device=snpe,backend_type=${BACKEND},loadgen_scenario=${SCENARIO},framework=kilt,model_name=resnet50,loadgen_mode=AccuracyOnly,loadgen_dataset_size=50000,loadgen_buffer_size=1024 , get accuracy_report
+axs byquery sut_name=${SUT},loadgen_output,image_classifier,device=snpe,backend_type=${BACKEND},loadgen_scenario=${SCENARIO},framework=kilt,model_name=resnet50,loadgen_mode=AccuracyOnly,loadgen_dataset_size=50000,loadgen_buffer_size=1024 , get accuracy
 ```
 
 Run Performance (Quick Run)
@@ -89,5 +90,5 @@ axs byquery sut_name=${SUT},loadgen_output,image_classifier,device=snpe,backend_
 
 Run Performance (Full Run)
 ```
-axs byquery sut_name=${SUT},loadgen_output,image_classifier,device=snpe,backend_type=${BACKEND},loadgen_scenario=${SCENARIO},framework=kilt,model_name=resnet50,loadgen_mode=PerformanceOnly,loadgen_dataset_size=50000,loadgen_buffer_size=1024,loadgen_target_latency=</measured value/> , parse_summary
+axs byquery sut_name=${SUT},loadgen_output,image_classifier,device=snpe,backend_type=${BACKEND},loadgen_scenario=${SCENARIO},framework=kilt,model_name=resnet50,loadgen_mode=PerformanceOnly,loadgen_dataset_size=50000,loadgen_buffer_size=1024,loadgen_target_latency=<measured value> , parse_summary
 ```
