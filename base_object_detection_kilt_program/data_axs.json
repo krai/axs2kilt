@@ -1,0 +1,62 @@
+{
+    "_parent_entries": [ [ "^", "byname", "base_kilt_program" ] ],
+
+    "model_name": "retinanet",
+    "task": "object_detection",
+    "dataset_name": "openimages",
+
+    "loadgen_buffer_size": 64,
+    "loadgen_dataset_size": 24781,
+
+    "kilt_datasource_config": null,
+    "kilt_device_config": null,
+    "kilt_device_ringfence_driver": null,
+    "kilt_device_qaic_skip_stage": "convert",
+    "kilt_device_enqueue_yield_time": null,
+    "kilt_device_scheduler_yield_time": null,
+    "kilt_dispatch_yield_time": null,
+    "kilt_scheduler_yield_time": null,
+    "kilt_unique_server_id": null,
+
+    "recommended_activation_count": 3,
+    "recommended_batch_size": 1,
+    "recommended_input_select": 0,
+    "recommended_max_wait_abs": "",
+    "recommended_queue_length": 4,
+    "recommended_threads_per_queue": 4,
+
+    "verbosity": 0,
+
+    "device_id": 0,
+    "set_device_id": "all",
+
+    "kilt_model_disable_nms": null,
+    "kilt_model_max_detections": 600,
+    "kilt_object_detection_preprocessed_subset_fof": "original_dimensions.txt",
+    "ml_model_has_background_class":"YES",
+    "ml_model_image_height": 800,
+    "ml_model_image_width": 800,
+    "ml_model_image_channels": 3,
+
+    "dataset_openimages_preprocessed_query": [ "^^", "substitute", [["preprocessed", "dataset_name=openimages", "preprocess_method=pillow_torch", "first_n=#{loadgen_dataset_size}#", "quantized+" ]] ],
+    "dataset_openimages_preprocessed_entry": [ "^", "byquery", [[ "^^", "get", "dataset_openimages_preprocessed_query" ]], {}, ["dataset_openimages_preprocessed_query"] ], 
+    "kilt_object_detection_preprocessed_dir": [ "^^", "execute", [[
+        [ "get", "dataset_openimages_preprocessed_entry" ],
+        [ "get_path", [["preprocessed" ]] ]
+        ]], {}, ["dataset_openimages_preprocessed_entry"] ],
+
+    "kilt_prior_bin_path": [ "^", "execute", [[
+	 [ "byquery", "compiled,lib_kilt" ],
+	 [ "get_path",[[ "include", "plugins", "nms-abp", "data"]] ]
+    ]] ],
+
+    "flavour": "retinanet",
+
+    "program_binary_query": [ "^^", "substitute", "compiled,kilt_executable,#{flavour}#,device=#{device}#"],
+    "program_binary_entry": [ "^", "byquery", [[ "^^", "get", "program_binary_query" ]], {}, ["program_binary_query"] ],
+    "program_binary_path":[ "^^", "execute", [[
+        [ "get", "program_binary_entry" ],
+        [ "get_path" ]
+    ]] ]
+
+}

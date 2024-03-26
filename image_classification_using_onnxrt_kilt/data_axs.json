@@ -1,0 +1,101 @@
+{
+    "_parent_entries": [ [ "^", "byname", "shell" ], ["^", "byname", "base_image_classification_kilt_program"] ],
+    "_producer_rules": [
+            [ [ "loadgen_output", "task=image_classification", "device=onnxrt", "framework=kilt" ], [["get", "pipeline"]] ]
+    ],
+
+    "device": "onnxrt",
+    
+    "backend_type": "cpu",
+
+    "driver_path": null,
+
+    "loadgen_scenario": "SingleStream",
+
+    "recommended_batch_size": [ "^^", "case", [ [ "^^", "get", "loadgen_scenario" ],
+      "SingleStream", 1,
+      "Offline", 8,
+      "MultiStream" , 8
+    ] ],
+
+    "verbosity": 1,
+
+    "loadgen_trigger_cold_run": true,
+
+    "compiled_model_query": ["^^", "substitute", ["onnx_model,converted,model_name=#{model_name}#"]],
+    "compiled_model_entry": [ "^", "byquery", [[ "^^", "get", "compiled_model_query" ]], {}, ["compiled_model_query"] ],
+    "compiled_model_source": [ "^^", "execute", [[
+            [ "get", "compiled_model_entry"],
+            [ "get_path" ]
+        ]]
+    ],
+    "model_path": [ "^^", "get", "compiled_model_source" ],
+
+    "retrained": [ "^^", "dig", [[ "^^", "substitute", [[ "compiled_model_entry", "retrained" ]] ]] ],
+    "input_data_types": [ "^^", "dig", [[ "^^", "substitute", [[ "compiled_model_entry", "input_data_types" ]] ]] ],
+    "weight_data_types": [ "^^", "dig", [[ "^^", "substitute", [[ "compiled_model_entry", "weight_data_types" ]] ]] ],
+    "starting_weights_filename": [ "^^", "dig", [[ "^^", "substitute", [[ "compiled_model_entry", "starting_weights_filename" ]] ]] ],
+    "weight_transformations": [ "^^", "dig", [[ "^^", "substitute", [[ "compiled_model_entry", "weight_transformations" ]] ]] ],
+
+    "onnxruntime_path": [ "^", "execute", [[
+        [ "byquery", "extracted,onnxruntime_lib" ],
+        [ "get_path" ]
+    ]] ],
+
+    "model_input_format": "FLOAT32,-1,224,224,3", 
+    "model_output_format": "INT64,-1",
+
+    "dataset_imagenet_preprocessed_query": [ "^^", "substitute", [["preprocessed", "dataset_name=#{dataset_name}#","preprocess_method=opencv", "first_n=#{loadgen_dataset_size}#", "normalayout+" ]] ],
+    "dataset_imagenet_preprocessed_entry": [ "^", "byquery", [[ "^^", "get", "dataset_imagenet_preprocessed_query" ]], {}, ["dataset_imagenet_preprocessed_query"] ],
+    
+    "recommended_max_wait_abs": null,
+
+    "loadgen_compliance_test": false,
+    "env": {
+        "LD_LIBRARY_PATH": [ "^^", "substitute", "#{driver_path}#:#{onnxruntime_path}#/lib"],
+        "KILT_JSON_CONFIG": [ "^^", "substitute", "#{input_parameters_file_path}#" ]
+    },
+
+    "output_entry_parents": [ "AS^IS", "AS^IS", ["^", "byname", "base_image_classification_loadgen_experiment"] ],
+    "output_entry_param_names": [
+        "device",
+        "backend_type",
+        "driver_path",
+        "loadgen_compliance_test",
+        "loadgen_count_override",
+        "loadgen_count_override_max",
+        "loadgen_count_override_min",
+        "loadgen_multistreamness",
+        "loadgen_target_latency",
+        "loadgen_target_qps",
+        "loadgen_trigger_cold_run",
+        "verbosity",
+
+        "retrained",
+        "input_data_types",
+        "weight_data_types",
+        "starting_weights_filename",
+        "weight_transformations",  
+
+        "dataset_imagenet_preprocessed_dir",
+        "dataset_imagenet_preprocessed_input_square_side",
+        "dataset_imagenet_preprocessed_subset_fof",
+        "ml_model_has_background_class"
+    ], 
+    "output_entry_subs_listmap": [
+        "kilt_model_name", "#{model_name}#",
+        "kilt_input_format", "#{model_input_format}#",
+        "kilt_output_format", "#{model_output_format}#",
+        "kilt_model_batch_size", "#{recommended_batch_size}#",
+        "kilt_model_root", "#{compiled_model_source}#",
+        "kilt_backend_type", "#{backend_type}#",
+
+        "url", "#{starting_weights_filename}#"
+    ],
+    "in_dir": [ "^^", "execute", [[
+        [ "get", "output_entry" ],
+        [ "get_path" ]
+    ]] ],
+
+    "shell_cmd_with_subs": [ "^^", "substitute", "#{program_binary_path}#"]
+}

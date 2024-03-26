@@ -1,0 +1,8 @@
+{
+    "_parent_entries": [ [ "^", "byname", "git" ] ],
+    "_producer_rules": [
+        [ [ "git_repo", "repo_name=kilt-mlperf" ], [["get_kernel"],["byname","git"],["clone"]], {
+            "tags": [ "git_repo" ]
+        } ]
+    ]
+}

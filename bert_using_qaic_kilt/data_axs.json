@@ -1,0 +1,132 @@
+{
+    "_parent_entries": [ [ "^", "byname", "shell" ], ["^", "byname", "base_bert_kilt_program"] ],
+    "_producer_rules": [
+            [ [ "loadgen_output", "task=bert", "framework=kilt", "device=qaic" ], [["get", "pipeline"]] ]
+    ],
+
+    "model_name": "bert-99",
+
+    "device": "qaic",
+    
+    "driver_path": "/opt/qti-aic/dev/lib/x86_64",
+
+    "loadgen_scenario": "SingleStream",
+
+    "loadgen_trigger_cold_run": false,
+
+    "network_server_port": "8080",
+    "network_server_ip_address": "127.0.0.1",
+    "network_num_sockets": 8,
+    "network_payload_size": 3072,
+
+    "kilt_model_seq_length": [ "^^", "get_config_from_sut", ["ml_model_seq_length", 384] ],
+
+    "compiled_model_source_query": [ "^^", "substitute", [["kilt_ready", "device=#{device}#", "model_name=#{model_name}#", "loadgen_scenario=#{loadgen_scenario}#", "sut_name=#{sut_name}#", "seq=#{kilt_model_seq_length}#", "set_device_id=#{set_device_id}#" ]] ],
+
+
+    "recommended_activation_count": [ "^^", "get_config_from_sut", ["recommended_activation_count", [ "^^", "substitute", "#{recommended_activation_count}#" ]] ],
+    "recommended_batch_size": [ "^^", "get_config_from_sut", ["recommended_batch_size", [ "^^", "substitute", "#{recommended_batch_size}#" ]] ],
+    "recommended_input_select": [ "^^", "get_config_from_sut", ["recommended_input_select", [ "^^", "substitute", "#{recommended_input_select}#" ]] ],
+    "recommended_max_wait_abs": [ "^^", "get_config_from_sut", ["recommended_max_wait_abs", [ "^^", "substitute", "#{recommended_max_wait_abs}#" ]] ],
+    "recommended_queue_length":  [ "^^", "get_config_from_sut", ["recommended_queue_length", [ "^^", "substitute", "#{recommended_queue_length}#" ]] ],
+    "recommended_threads_per_queue":  [ "^^", "get_config_from_sut", ["recommended_threads_per_queue", [ "^^", "substitute", "#{recommended_threads_per_queue}#" ]] ],
+    "kilt_datasource_config":  [ "^^", "get_config_from_sut", ["kilt_datasource_config", [ "^^", "substitute", "#{kilt_datasource_config}#" ]] ],
+    "kilt_device_config":  [ "^^", "get_config_from_sut", ["kilt_device_config", [ "^^", "substitute", "#{kilt_device_config}#" ]] ],
+    "kilt_device_ringfence_driver":  [ "^^", "get_config_from_sut", ["kilt_device_ringfence_driver", [ "^^", "substitute", "#{kilt_device_ringfence_driver}#" ]] ],
+    "kilt_device_enqueue_yield_time":  [ "^^", "get_config_from_sut", ["kilt_device_enqueue_yield_time", [ "^^", "substitute", "#{kilt_device_enqueue_yield_time}#" ]] ],
+    "kilt_device_scheduler_yield_time":  [ "^^", "get_config_from_sut", ["kilt_device_scheduler_yield_time", [ "^^", "substitute", "#{kilt_device_scheduler_yield_time}#" ]] ],
+    "kilt_dispatch_yield_time":  [ "^^", "get_config_from_sut", ["kilt_dispatch_yield_time", [ "^^", "substitute", "#{kilt_dispatch_yield_time}#" ]] ],
+    "kilt_scheduler_yield_time":  [ "^^", "get_config_from_sut", ["kilt_scheduler_yield_time", [ "^^", "substitute", "#{kilt_scheduler_yield_time}#" ]] ],
+    "kilt_unique_server_id":  [ "^^", "get_config_from_sut", ["kilt_unique_server_id", [ "^^", "substitute", "#{kilt_unique_server_id}#" ]] ],
+
+
+
+    "device_id": [ "^^", "get_config_from_sut", ["device_id", [ "^^", "substitute", "#{device_id}#" ]] ],
+
+    "loadgen_buffer_size": [ "^^", "get_config_from_sut", ["loadgen_buffer_size", [ "^^", "substitute", "#{loadgen_buffer_size}#"]] ],
+    "loadgen_target_qps": [ "^^", "get_config_from_sut", ["loadgen_target_qps", [ "^^", "substitute", "#{loadgen_target_qps}#"]] ],
+    "loadgen_target_latency": [ "^^", "get_config_from_sut", ["loadgen_target_latency", [ "^^", "substitute", "#{loadgen_target_latency}#"]] ],
+    "loadgen_multistreamness": null,
+    "loadgen_count_override_min": null,
+    "loadgen_count_override_max": null,
+    "loadgen_min_duration_s": null,
+    "loadgen_max_duration_s": null ,
+    "loadgen_compliance_test": false,
+
+
+    "env": {
+        "LD_LIBRARY_PATH": [ "^^", "substitute", "#{driver_path}#:#{protobuf_path}#/install/lib/"],
+        "KILT_JSON_CONFIG": [ "^^", "substitute", "#{input_parameters_file_path}#" ]
+    },
+
+    "output_entry_parents": [ "AS^IS", "AS^IS", ["^", "byname", "base_bert_loadgen_experiment"], ["^", "byname", "base_qaic_experiment"]],
+    "output_entry_param_names": [
+        "device",
+        "driver_path",
+        "fan",
+        "fan_rpm",
+        "flavour",
+        "setting_fan",
+        "kilt_device_qaic_skip_stage",
+        "kilt_datasource_config",
+        "kilt_device_config",
+        "kilt_device_ringfence_driver",
+        "kilt_device_enqueue_yield_time",
+        "kilt_device_scheduler_yield_time",
+        "kilt_dispatch_yield_time",
+        "kilt_scheduler_yield_time",
+        "kilt_unique_server_id",
+        "loadgen_compliance_test",
+        "loadgen_count_override",
+        "loadgen_count_override_max",
+        "loadgen_count_override_min",
+        "loadgen_multistreamness",
+        "loadgen_target_latency",
+        "loadgen_target_qps",
+        "loadgen_trigger_cold_run",
+        "network_server_ip_address",
+        "network_server_port",
+        "network_num_sockets",
+        "network_payload_size",
+        "vc",
+        "vc_set",
+        "verbosity",
+	"sdk_ver",
+    
+        "input_data_types",
+        "retrained",
+        "url",
+        "weight_data_types",
+        "weight_transformations",
+
+        "kilt_model_seq_length",
+        "squad_dataset_original_path",
+        "tokenized_squad_path"
+    ],
+    "output_entry_subs_listmap": [
+        "kilt_model_name", "bert",
+
+        "kilt_device_ids", "#{device_id}#",
+        "kilt_input_format", "#{model_input_format}#",
+        "kilt_max_wait_abs", "#{recommended_max_wait_abs}#",
+        "kilt_model_batch_size", "#{recommended_batch_size}#",
+        "kilt_model_root", "#{compiled_model_source}#",
+        "kilt_output_format", "#{model_output_format}#",
+        "qaic_activation_count", "#{recommended_activation_count}#",
+        "qaic_queue_length", "#{recommended_queue_length}#",
+        "qaic_threads_per_queue", "#{recommended_threads_per_queue}#",
+        "qaic_input_select", "#{recommended_input_select}#",
+
+        "dataset_squad_tokenized_input_ids", "#{tokenized_squad_files_prefix}#_input_ids.raw",
+        "dataset_squad_tokenized_input_mask", "#{tokenized_squad_files_prefix}#_input_mask.raw",
+        "dataset_squad_tokenized_max_seq_length", "#{dataset_max_seq_length}#",
+        "dataset_squad_tokenized_root", "#{tokenized_squad_dirname}#",
+        "dataset_squad_tokenized_segment_ids", "#{tokenized_squad_files_prefix}#_segment_ids.raw",
+
+        "qaic_tool_chain_path", "/opt/qti-aic",
+        "duration", 120, 
+        "pre_post_processing", "off"
+    ],
+
+    "shell_cmd_with_subs": [ "^^", "substitute", "#{program_binary_path}#"]
+}

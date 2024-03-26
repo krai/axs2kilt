@@ -1,0 +1,62 @@
+{
+    "_parent_entries": [ [ "^", "byname", "shell" ] ],
+    "_producer_rules": [
+        [ [ "compiled", "kilt_executable", "device=tensorrt", "retinanet_server" ], [["run"]], { "return_saved_record_entry": false }, ["shell_cmd_with_subs"] ]
+    ],
+
+    "tags": ["hide_from_release"],
+    "device": "tensorrt",
+
+    "lib_kilt_path": [ "^", "execute", [[
+        [ "byquery", "compiled,lib_kilt" ],
+        [ "get_path" ]
+    ]] ],
+
+    "loadgen_path": [ "^", "execute", [[
+        [ "byquery", "compiled,loadgen_c" ],
+        [ "get_path" ]
+    ]] ],
+
+    "protobuf_path": [ "^", "execute", [[
+        [ "byquery", "compiled,protobuf" ],
+        [ "get_path" ]
+    ]] ],
+
+    "cjson_lib_path": [ "^", "execute", [[
+        [ "byquery", "lib,lib_name=cjson" ],
+        [ "get_path", ["cJSON.o"] ]
+     ]] ],
+    "return_this_entry": [ "^^", "execute", [[
+        [ "get_kernel" ],
+        [ "work_collection" ],
+        [ "attached_entry", [ "compiled_kilt_executable_retinanet_network_server_tensorrt", {
+                "tags": [ "compiled", "kilt_executable", "retinanet_server" ],
+                "device" : "tensorrt",
+                "file_name" : "retinanet_server"
+            } ] ],
+        [ "save" ]
+    ]] ],
+
+    "in_dir": [ "^^", "execute", [[
+        [ "get", "return_this_entry" ],
+        [ "get_path" ],
+        0,
+        [ "func", "os.path.dirname" ]
+    ]] ],
+
+    "sut_name": ["^", "func", "socket.gethostname" ],
+    "tensorrt_scenario_config_query": [ "config", "tensorrt_scenario_parameters" ],
+    "tensorrt_scenario_config_entry": [ "^", "byquery", [[ "^^", "get", "tensorrt_scenario_config_query" ]], {}, [ "tensorrt_scenario_config_query" ]],
+    "cuda_libs_path": [ "^^", "dig", [[ "^^", "substitute", [[
+        "tensorrt_scenario_config_entry", "#{sut_name}#", "libs"
+    ]] ]] ],
+    "cuda_headers_path": [ "^^", "dig", [[ "^^", "substitute", [[
+        "tensorrt_scenario_config_entry", "#{sut_name}#", "headers"
+    ]] ]] ],
+    
+    "compiler_deps": "g++ -c -I../ -DCK_HOST_OS_NAME2_LINUX=1 -DCK_HOST_OS_NAME_LINUX=1 -DCK_TARGET_OS_NAME2_LINUX=1 -DCK_TARGET_OS_NAME_LINUX=1 -O3 -ffast-math -march=znver2 -DR282 -DMODEL_RX50 -DKILT_BENCHMARK_NETWORK_OBJECT_DETECTION_SERVER -DKILT_DEVICE_TENSORRT -DKILT_CONFIG_FROM_JSON -DKILT_CONFIG_TRANSLATE_X -Wall -Wno-sign-compare -std=c++17 -I/opt/qti-aic/dev/inc/ -I/opt/qti-aic/dev/inc/qaic-api-common -I/install/ -I#{cjson_lib_entry.include_path}# -I#{lib_kilt_path}#/cJSON/ -I#{lib_kilt_path}#/include -I#{protobuf_path}#/install/include -I#{loadgen_path}#/include -I#{cuda_headers_path}#",
+    "server_o":[ "^^", "substitute", "#{compiler_deps}#  #{lib_kilt_path}#/include/benchmarks/network/object-detection/server/server.cpp -o server.o"],
+    "connection_o":[ "^^", "substitute", "#{compiler_deps}#  #{lib_kilt_path}#/include/benchmarks/network/common/connection.cpp -o connection.o"],
+
+    "shell_cmd_with_subs": [ "^^", "substitute", "#{server_o}# && #{connection_o}# && g++ server.o connection.o #{cjson_lib_path}# -o retinanet_server -L#{loadgen_path}#/lib -lmlperf_loadgen -L#{lib_kilt_path}#/lib -lpthread -ldl  -L#{cuda_libs_path}# -lcudart -lnvinfer -lnvinfer_plugin"]
+}

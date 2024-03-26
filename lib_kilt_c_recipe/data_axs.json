@@ -1,0 +1,38 @@
+{
+    "_parent_entries": [ [ "^", "byname", "shell" ] ],
+    "_producer_rules": [
+        [ [ "compiled", "lib_kilt" ], [["run"]], { "return_saved_record_entry": false }, ["shell_cmd_with_subs"] ]
+    ],
+
+    "abs_source_path": [ "^^", "get_path" ],
+
+    "lib_kilt_source_path": [ "^", "execute", [[
+        [ "byquery", "git_repo,repo_name=kilt-mlperf" ],
+        [ "get_path" ]
+    ]] ], 
+
+    "return_this_entry": [ "^^", "execute", [[
+        [ "get_kernel" ],
+        [ "work_collection" ],
+        [ "attached_entry", [ "compiled_lib_kilt", {
+                "tags": [ "compiled", "lib_kilt" ]
+            } ] ],
+        [ "save" ]
+    ]] ],
+
+    "lib_kilt_include_path": [ "^", "execute", [[
+        [ "byquery", "git_repo,repo_name=kilt-mlperf" ],
+        [ "get_path" , "kilt.h" ]
+    ]] ],
+
+    "install_dir":[ "^^", "execute", [[
+        [ "get", "return_this_entry" ],
+        [ "get_path" ]
+    ]] ],
+
+    "in_dir": [ "^^", "substitute", "#{install_dir}#" ],
+
+    "post_install_script_path": [ "^^", "substitute", "#{abs_source_path}#/post_install.sh" ],
+
+    "shell_cmd_with_subs": [ "^^", "substitute", "mkdir -p include && cp -r #{lib_kilt_source_path}#/* ./include/ &&  INSTALL_DIR=\"#{install_dir}#\" #{post_install_script_path}# "]
+}

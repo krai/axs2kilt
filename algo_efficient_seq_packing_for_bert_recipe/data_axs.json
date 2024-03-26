@@ -1,0 +1,10 @@
+{
+    "_producer_rules": [
+        [ [ "downloaded", "bert", "efficient_seq_packing_algo" ], [["get_kernel"],["byname","downloader"],["download"]], {
+            "url": "https://raw.githubusercontent.com/graphcore/examples/v3.2.0/tutorials/blogs_code/packedBERT/spfhp.py",
+            "md5": "07af7ee58512385c25b721d02f0d1ce0",
+            "entry_name": "downloaded_spfhp",
+            "file_name": "spfhp.py"
+        }, [] ]
+    ]
+}

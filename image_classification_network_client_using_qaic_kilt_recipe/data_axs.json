@@ -1,0 +1,55 @@
+{
+    "_parent_entries": [ [ "^", "byname", "shell" ] ],
+    "_producer_rules": [
+        [ [ "compiled", "kilt_executable", "resnet50_client", "device=qaic" ], [["run"]], { "return_saved_record_entry": false }, ["shell_cmd_with_subs"] ]
+    ],
+
+    "device": "qaic",
+
+    "lib_kilt_path": [ "^", "execute", [[
+        [ "byquery", "compiled,lib_kilt" ],
+        [ "get_path" ]
+    ]] ],
+
+    "loadgen_path": [ "^", "execute", [[
+        [ "byquery", "git_repo,collection,repo_name=axs2mlperf" ],
+        [],
+        [ "byquery", "compiled,loadgen_c" ],
+        [ "get_path" ]
+    ]] ],
+
+    "protobuf_path": [ "^", "execute", [[
+        [ "byquery", "compiled,protobuf" ],
+        [ "get_path" ]
+    ]] ],
+
+    "cjson_lib_path": [ "^", "execute", [[
+        [ "byquery", "lib,lib_name=cjson" ],
+        [ "get_path", ["cJSON.o"] ]
+     ]] ],
+    "protobuf_sut_lib": "lib",
+
+    "return_this_entry": [ "^^", "execute", [[
+        [ "get_kernel" ],
+        [ "work_collection" ],
+        [ "attached_entry", [ "compiled_kilt_executable_resnet50_network_client_qaic", {
+                "tags": [ "compiled", "kilt_executable", "resnet50_client" ],
+                "file_name" : "qaic_image_classifier_client",
+                "device": [ "^^", "substitute", "#{device}#" ]
+            } ] ],
+        [ "save" ]
+    ]] ],
+
+    "in_dir": [ "^^", "execute", [[
+        [ "get", "return_this_entry" ],
+        [ "get_path" ],
+        0,
+        [ "func", "os.path.dirname" ]
+    ]] ],
+
+    "compiler_deps": "g++ -c -I../ -DCK_HOST_OS_NAME2_LINUX=1 -DCK_HOST_OS_NAME_LINUX=1 -DCK_TARGET_OS_NAME2_LINUX=1 -DCK_TARGET_OS_NAME_LINUX=1 -DKILT_BENCHMARK_NETWORK_CLASSIFICATION_CLIENT -DKILT_DEVICE_QAIC -DKILT_CONFIG_FROM_JSON -DKILT_CONFIG_TRANSLATE_X -std=c++11 -O3 -ffast-math -march=znver2 -DENABLE_ZEN2 -DR282 -Wall -Wno-sign-compare -Wno-unused-result -std=c++17 -I/opt/qti-aic/dev/inc/ -I/opt/qti-aic/dev/inc/qaic-api-common -I/install/ -I#{cjson_lib_entry.include_path}# -I#{lib_kilt_path}#/cJSON/ -I#{lib_kilt_path}#/include -I#{loadgen_path}#/include -I#{protobuf_path}#/install/include",
+    "harness_o":[ "^^", "substitute", "#{compiler_deps}#  #{lib_kilt_path}#/include/benchmarks/harness/harness.cpp -o harness.o"],
+    "connection_o":[ "^^", "substitute", "#{compiler_deps}#  #{lib_kilt_path}#/include/benchmarks/network/common/connection.cpp -o connection.o"],
+
+    "shell_cmd_with_subs": [ "^^", "substitute", "#{harness_o}# && #{connection_o}# && g++ harness.o connection.o #{cjson_lib_path}# -o qaic_image_classifier_client -L#{loadgen_path}#/lib -lmlperf_loadgen -L#{protobuf_path}#/install/#{protobuf_sut_lib}# -lprotobuf -L#{lib_kilt_path}#/lib -ldl -lQAic -lpthread"]
+}

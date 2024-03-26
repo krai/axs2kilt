@@ -1,0 +1,46 @@
+{   
+    "lib_kilt_path": [ "^", "execute", [[
+        [ "byquery", "compiled,lib_kilt" ],
+        [ "get_path" ]
+    ]] ],
+
+    "loadgen_path": [ "^", "execute", [[
+        [ "byquery", "git_repo,collection,repo_name=axs2mlperf" ],
+        [],
+        [ "byquery", "compiled,loadgen_c" ],
+        [ "get_path" ]
+    ]] ],
+
+    "qaic_sdk_version_reference": [1, 12, 0, 60],
+
+    "qaic_sdk_version": [ "^^", "execute", [[
+        [ "get_kernel" ],
+        [ "byname", "qaic_sdk_info" ],
+        [ "get", "qaic_sdk_version" ]
+    ]] ],
+   "compare_sdk_versions_result": [ "^^", "compare_sdk_versions" ],
+
+    "protobuf_version": [ "^^", "case",   [ ["^^", "get", "compare_sdk_versions_result"],
+        [ 1, 0 ], "3.21.12"],
+        { "default_value": "3.11.4" }
+    ],
+    "protobuf_path": [ "^^", "execute", [[
+        [ "get_kernel" ],
+        [ "byquery", [ "^^", "substitute","compiled,protobuf,protobuf_version=#{protobuf_version}#"] ],
+        [ "get_path" ]
+    ]] ],
+    
+    "sut_name": ["^", "func", "socket.gethostname" ],
+
+    "protobuf_sut_lib": [ "^^", "case",   [ ["^^", "get", "sut_name"],
+        "dyson", "lib64"],
+        { "default_value": "lib"}
+    ],
+
+    "cjson_lib_path": [ "^", "execute", [[
+        [ "byquery", "lib,lib_name=cjson" ],
+        [ "get_path", ["cJSON.o"] ]
+     ]] ],
+    "cjson_lib_entry": [ "^", "byquery", "lib,lib_name=cjson" ]
+    
+}

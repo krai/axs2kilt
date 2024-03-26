@@ -1,0 +1,59 @@
+{
+    "_parent_entries": [ [ "^", "byname", "python_script" ] ],
+    "_producer_rules": [
+        [ [ "efficient_seq_packed", "dataset_name=squad_v1_1" ], [["run"]], {} ]
+    ],
+
+    "max_seq_length": 384,
+
+    "squad_dataset_query": ["preprocessed", "dataset_name=squad_v1_1", "calibration=yes", "calibration_option=features", [ "^^", "substitute", "dataset_max_seq_length=#{max_seq_length}#"]],
+    "squad_dataset_entry": [ "^", "byquery", [[ "^^", "get", "squad_dataset_query" ]], {}, ["squad_dataset_query"] ],
+    "squad_dataset_path": [ "^^", "execute", [[
+        [ "get",  "squad_dataset_entry" ],
+        [ "get_path" ]
+    ]] ],
+
+    "lib_efficient_seq_packing_path": [ "^", "execute", [[
+        [ "byquery", "downloaded,bert,efficient_seq_packing_algo" ],
+        [ "get_path" ],
+        0,
+        [ "func", "os.path.dirname" ]
+    ]] ],
+
+    "mlperf_inference_git_path": [ "^", "execute", [[
+        [ "byquery", "git_repo,repo_name=mlperf_inference_git" ],
+        [ "get_path" , "language/bert/" ]
+    ]] ],
+
+    "python_deps": [
+        [ "^", "byquery", "python_package,package_name=numpy,package_version=1.23.0"],
+        [ "^", "byquery", "python_package,package_name=tokenization"],
+	[ "^", "byquery", "python_package,package_name=six"],
+        [ "^^", "substitute", "#{lib_efficient_seq_packing_path}#"],
+        [ "^^", "substitute", "#{mlperf_inference_git_path}#"]
+    ],
+
+    "shell_script_path":[ "^^", "get_path", "create_inputfiles_list.sh" ],
+
+    "return_this_entry": [ "^^", "execute", [[
+        [ "get_kernel" ],
+        [ "work_collection" ],
+        [ "attached_entry", [ ["^^", "substitute", "efficient_seq_packed_squad_v1_1_msl_#{max_seq_length}#"] , ["^^", "substitute", {
+            "tags": ["efficient_seq_packed"],
+            "dataset_name": "squad_v1_1",
+            "max_seq_length": "#{max_seq_length}#",
+            "squad_dataset_path" : "#{squad_dataset_path}#"
+         } ] ] ],
+         [ "save" ]
+    ]] ],
+
+    "in_dir": [ "^^", "execute", [[
+        [ "get", "return_this_entry" ],
+        [ "get_path" ]
+    ]] ],
+
+    "rel_script_path": "pack.py",
+
+    "script_extra_params": [ "^^", "substitute", "\"#{squad_dataset_path}#\" \"./packed\" #{max_seq_length}# \"#{shell_script_path}#\" " ]
+
+}

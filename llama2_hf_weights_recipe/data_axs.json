@@ -1,0 +1,23 @@
+{
+    "_producer_rules": [
+        [ [ "downloaded", "hf_model", "llama2", "7b", "model_name=Llama-2-7b-chat-hf"], [["get_kernel"],["byname","downloader"],["download"]], {
+            "downloading_tool_query": [ "AS^IS", "^^", "substitute", "shell_tool,can_download_url_from_huggingface,hf_token=#{hf_token}#" ],
+            "model_publisher": "meta-llama"
+        }, ["url", "file_name"] ],
+        [ [ "downloaded", "hf_model", "llama2", "13b", "model_name=Llama-2-13b-chat-hf"], [["get_kernel"],["byname","downloader"],["download"]], {
+            "downloading_tool_query": [ "AS^IS", "^^", "substitute", "shell_tool,can_download_url_from_huggingface,hf_token=#{hf_token}#" ],
+            "model_publisher": "meta-llama"
+        }, ["url", "file_name"] ],
+        [ [ "downloaded", "hf_model", "llama2", "70b", "model_name=Llama-2-70b-chat-hf"], [["get_kernel"],["byname","downloader"],["download"]], {
+            "downloading_tool_query": [ "AS^IS", "^^", "substitute", "shell_tool,can_download_url_from_huggingface,hf_token=#{hf_token}#" ],
+            "model_publisher": "meta-llama"
+        }, ["url", "file_name"] ]
+    ],
+
+    "url": [ "AS^IS", "^^", "substitute", "#{model_publisher}#/#{model_name}#"],
+    "entry_name": ["^^", "substitute", "downloaded_#{model_name}#"],
+
+    "file_name": "",
+    "hf_token": "",
+    "_example_of_hf_token": "hf_xxxxxxxxxxxxxxxxxxxxxxxx"
+}

@@ -1,0 +1,52 @@
+{
+    "_parent_entries": [ [ "^", "byname", "base_kilt_program" ] ],
+
+    "model_name": "llama2",
+    "variant": "7b",
+    "task":"llm",
+    "dataset_name": "openorca",
+
+    "loadgen_buffer_size": 1,
+    "loadgen_dataset_size": 100,
+
+    "kilt_max_sum_length": 2047,
+
+    "kilt_datasource_config": null,
+    "kilt_device_config": null,
+    "kilt_device_ringfence_driver": null,
+    "kilt_device_qaic_skip_stage": "",
+    "kilt_device_enqueue_yield_time": null,
+    "kilt_device_scheduler_yield_time": null,
+    "kilt_dispatch_yield_time": null,
+    "kilt_scheduler_yield_time": null,
+    "kilt_unique_server_id": null,
+
+    "recommended_activation_count": 3,
+    "recommended_batch_size": 1,
+    "recommended_input_select": 0,
+    "recommended_max_wait_abs": "",
+    "recommended_queue_length": 4,
+    "recommended_threads_per_queue": 4,
+
+    "verbosity": 0,
+
+    "device_id": 0,
+    "set_device_id": "all",
+
+    "kilt_openorca_preprocessed_dir_query": "preprocessed,dataset_name=openorca,openorca_dataset_type=full",
+    "kilt_openorca_preprocessed_dir_entry": [ "^", "byquery", [[ "^^", "get", "kilt_openorca_preprocessed_dir_query" ]], {}, [ "kilt_openorca_preprocessed_dir_query" ] ] ,
+    "kilt_openorca_preprocessed_dir": [ "^^", "execute", [[ 
+    	[ "get", "kilt_openorca_preprocessed_dir_entry" ],
+	[ "get_path" ]
+    ]] ],
+
+    "flavour": "llama2",
+
+    "program_binary_query": [ "^^", "substitute", "compiled,kilt_executable,#{flavour}#,device=#{device}#,variant=#{variant}#"],
+    "program_binary_entry": [ "^", "byquery", [[ "^^", "get", "program_binary_query" ]], {}, ["program_binary_query"] ],
+    "program_binary_path":[ "^^", "execute", [[
+        [ "get", "program_binary_entry" ],
+        [ "get_path" ]
+    ]] ]
+
+}

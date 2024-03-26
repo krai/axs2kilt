@@ -1,0 +1,76 @@
+{
+    "_parent_entries": [ [ "^", "byname", "base_loadgen_program" ] ],
+
+    "framework": "kilt",
+
+    "sut_query": [ "^^", "substitute", ["sut_config,sut=#{sut_name}#,model=#{model_name}#,loadgen_scenario=#{loadgen_scenario}#,device_id=#{set_device_id}#"] ],
+    "sut_entry": [ "^^", "execute", [[
+        [ "get_kernel" ],
+        [ "byquery", [ [ "^^", "get", "sut_query" ] ] ]
+    ]] ],
+    "sut_data_compiletime": [ "^^", "dig", "sut_entry.config_compiletime_model" ],
+    "sut_data_runtime": [ "^^", "dig", "sut_entry.config_runtime" ],
+
+    "system_name": [ "^^", "dig", "sut_entry.system" ],
+    "fan": [ "^^", "get_config_from_sut", ["fan", null ] ],
+
+    "setting_fan": [ "^^", "execute", [[
+        [ "get", "sut_entry" ],
+        [ "set_fan", [], { "fan_value": [ "^^", "get", "fan" ], "system_name": [ "^^", "get", "system_name" ]} ],
+        [],
+        [ "get", "fan" ]
+    ]] ],
+
+    "fan_rpm": [ "^^", "execute", [[
+        [ "get", "sut_entry" ],
+        [ "get_fan", [], { "system_name": [ "^^", "get", "system_name" ]}  ]
+    ]] ],
+
+
+    "actual_vc_dec": [ "^^", "execute", [[
+        [ "get_kernel" ],
+        [ "byname", ["qaic_hardware_control"]],
+        [ "get", "get_vc" ]
+    ]] ],
+    "vc": [ "^^", "get_config_from_sut", ["vc", 16] ],
+    "device_ids": [ "^^", "execute", [[
+        [ "get", "device_id" ],
+        [ "split", "," ]
+    ]] ],
+    "vc_set": [ "^^", "execute", [[
+        [ "get_kernel" ],
+        [ "byname", ["qaic_hardware_control"]],
+        [ "set_vcs", [], { "device_ids": ["^^","get", "device_ids"], "vc_dec": [ "^^", "get", "vc" ] } ],
+        [],
+        [ "get", "vc" ]
+    ]] ],
+
+    "sdk_ver_list": [ "^^", "execute", [[
+        [ "get_kernel" ],
+        [ "byname", [ "qaic_sdk_info" ]],
+        [ "get" , [ "qaic_sdk_version" ]]
+        ]]
+    ],
+    "sdk_ver": [ "^^", "list_to_str" ],
+
+    "compiled_model_source_entry": [ "^^", "execute", [[
+        [ "get_kernel" ],
+        [ "byquery", [ [ "^^", "get", "compiled_model_source_query" ] ] ]
+    ]] ],
+    "compiled_model_source": [ "^^", "execute", [[
+        [ "get", "compiled_model_source_entry" ],
+        [ "get_path", "elfs" ]
+    ]] ],
+    "compiled_model_sut_data": [ "^^", "dig", "compiled_model_source_entry.sut_data" ],
+
+    "model_path": [ "^^", "get", "compiled_model_source" ],
+
+    "retrained": [ "^^", "dig", "compiled_model_source_entry.retrained" ],
+    "input_data_types": [ "^^", "dig", "compiled_model_source_entry.input_data_types" ],
+    "weight_data_types" : [ "^^", "dig", "compiled_model_source_entry.weight_data_types" ],
+    "weight_transformations" : [ "^^", "dig", "compiled_model_source_entry.weight_transformations" ],
+    "url" : [ "^^", "dig", "compiled_model_source_entry.url" ],
+
+    "model_input_format": [ "^^", "dig", "compiled_model_source_entry.model_input_format" ],
+    "model_output_format": [ "^^", "dig", "compiled_model_source_entry.model_output_format" ]
+}
