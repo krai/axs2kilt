@@ -1,0 +1,37 @@
+{
+    "_parent_entries": [ [ "^", "byname", "shell" ], [ "^", "byname", "entry_creator" ] ],
+
+    "_producer_rules": [
+        [ [ "compiled", "trace_converter" ], [["get", "pipeline"]], { "return_saved_record_entry": false }, [ "shell_cmd_with_subs" ] ]
+    ],
+
+    "abs_source_path": [ "^^", "get_path" ],
+
+    "trace_converter_path": [ "^^", "execute", [[
+        [ "get_kernel" ],
+        [ "byquery", "git_repo,repo_name=kilt-tracer" ],
+        [ "get_path", "tools/converter" ]
+    ]] ],
+
+    "newborn_entry_name": "compiled_trace_converter",
+    "newborn_entry_tags": [ "compiled", "trace_converter" ],
+    "newborn_parent_names": [ "shell" ],
+    "newborn_entry_param_mapping": {
+        "abs_binary_path": [ "AS^IS", "AS^IS", "^^", "get_path" ],
+        "input_file": "",
+        "output_file": "output.pftrace",
+        "filter_start": "0m",
+        "filter_end": "1000m",
+        "pxx": "0",
+        "interval": "0ms",
+        "shell_cmd_with_subs": [ "AS#IS", "#{abs_binary_path}#/converter --input #{input_file}# --output #{output_file}# --filter_start #{filter_start}# --filter_end #{filter_end}# --pxx #{pxx}# --interval #{interval}#" ]
+    },
+
+    "pipeline": [ "^^", "execute", [[
+        ["run"],
+        [],
+        ["get", "newborn_entry"]
+    ]] ],
+
+    "shell_cmd_with_subs": "SRC_DIR=#{trace_converter_path}# INSTALL_DIR=#{newborn_entry_path}# #{abs_source_path}#/install.sh"
+}

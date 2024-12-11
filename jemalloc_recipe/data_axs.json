@@ -1,0 +1,35 @@
+{
+    "_parent_entries": [ [ "^", "byname", "shell" ], [ "^", "byname", "entry_creator" ] ],
+
+    "_producer_rules": [
+        [ [ "git_repo", "repo_name=jemalloc" ], [["get_kernel"],["byname", "git"],["clone"]], {
+            "url": "https://github.com/jemalloc/jemalloc.git"
+        } ],
+        [ [ "compiled", "jemalloc" ], [["get", "pipeline"]], { "return_saved_record_entry": false }, [ "shell_cmd_with_subs" ] ]
+    ],
+
+    "abs_source_path": [ "^^", "get_path" ],
+
+    "jemalloc_path": [ "^", "execute", [[
+        [ "byquery", "git_repo,repo_name=jemalloc" ],
+        [ "get_path" ]
+    ]] ],
+
+    "contained_files": { "libjemalloc": "libjemalloc.so.2" },
+
+    "newborn_entry_name": "compiled_jemalloc",
+    "newborn_entry_tags": [ "compiled", "jemalloc" ],
+    "newborn_parent_names": [],
+    "newborn_entry_param_names": [ "contained_files" ],
+
+
+
+    "pipeline": [ "^^", "execute", [[
+        [ "run" ],
+        [],
+        [ "get", "newborn_entry" ]
+    ]]],
+
+
+    "shell_cmd_with_subs": [ "^^", "substitute", "SRC_DIR=#{jemalloc_path}# INSTALL_DIR=#{newborn_entry_path}# #{abs_source_path}#/install.sh" ]
+}

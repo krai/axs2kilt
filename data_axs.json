@@ -1,0 +1,57 @@
+{
+    "tags": [
+        "collection",
+        "git_repo"
+    ],
+    "_parent_entries": [
+        [
+            "^",
+            "byname",
+            "git"
+        ],
+        [
+            "^",
+            "byname",
+            "core_collection"
+        ]
+    ],
+    "__query": "git_repo,collection,repo_name=axs2kilt-dev",
+    "newborn_parent_names": [
+        "git",
+        "core_collection"
+    ],
+    "contained_entries": {
+        "algo_efficient_seq_packing_for_bert_recipe": "algo_efficient_seq_packing_for_bert_recipe",
+        "base_bert_kilt_program": "base_bert_kilt_program",
+        "base_kilt_program": "base_kilt_program",
+        "base_kilt_recipe": "base_kilt_recipe",
+        "base_image_classification_kilt_program": "base_image_classification_kilt_program",
+        "base_object_detection_kilt_program": "base_object_detection_kilt_program",
+        "bert_using_onnxrt_kilt": "bert_using_onnxrt_kilt",
+        "bert_using_onnxrt_kilt_recipe": "bert_using_onnxrt_kilt_recipe",
+        "image_classification_using_onnxrt_kilt_recipe": "image_classification_using_onnxrt_kilt_recipe",
+        "image_classification_using_snpe_kilt_recipe": "image_classification_using_snpe_kilt_recipe",
+        "image_classification_using_armnn_kilt_recipe": "image_classification_using_armnn_kilt_recipe",
+        "object_detection_using_onnxrt_kilt_recipe": "object_detection_using_onnxrt_kilt_recipe",
+        "kilt_mlperf_dev_git_recipe": "kilt_mlperf_dev_git_recipe",
+        "lib_kilt_c_recipe": "lib_kilt_c_recipe",
+        "model_onnx_bert_large_packed_recipe": "model_onnx_bert_large_packed_recipe",
+        "model_tf_bert_large_recipe": "model_tf_bert_large_recipe",
+        "protobuf_c_recipe": "protobuf_c_recipe",
+        "image_classification_using_onnxrt_kilt": "image_classification_using_onnxrt_kilt",
+        "image_classification_using_snpe_kilt": "image_classification_using_snpe_kilt",
+        "image_classification_using_armnn_kilt": "image_classification_using_armnn_kilt",
+        "object_detection_using_onnxrt_kilt": "object_detection_using_onnxrt_kilt",
+        "squad_efficient_seq_packed_for_bert_recipe": "squad_efficient_seq_packed_for_bert_recipe",
+        "base_gptj_kilt_program": "base_gptj_kilt_program",
+        "base_llmcb_kilt_program": "base_llmcb_kilt_program",
+        "base_llm_kilt_program": "base_llm_kilt_program",
+        "jemalloc_recipe": "jemalloc_recipe",
+        "trace_converter_recipe": "trace_converter_recipe",
+        "kilt_tracer_recipe": "kilt_tracer_recipe",
+        "traced_kilt_entry": "traced_kilt_entry"
+    },
+    "repo_name": "axs2kilt",
+    "checkout": null,
+    "__completed": "2024.12.11_13h28m29s"
+}

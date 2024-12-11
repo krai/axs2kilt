@@ -1,0 +1,19 @@
+{
+    "lib_kilt_path": [ "^", "execute", [[
+        [ "byquery", "compiled,lib_kilt" ],
+        [ "get_path" ]
+    ]] ], 
+
+    "loadgen_path": [ "^", "execute", [[
+        [ "byquery", "git_repo,collection,repo_name=axs2mlperf" ],
+        [],
+        [ "byquery", "compiled,loadgen_c" ],
+        [ "get_path" ]
+    ]] ],
+
+    "cjson_lib_path": [ "^", "execute", [[
+        [ "byquery", "lib,lib_name=cjson" ],
+        [ "get_path", ["cJSON.o"] ]
+     ]] ],
+    "cjson_lib_entry": [ "^", "byquery", "lib,lib_name=cjson" ]
+}
